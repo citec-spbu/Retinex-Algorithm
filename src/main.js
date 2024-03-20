@@ -56,7 +56,10 @@ function loadImage(url) {
     image.onload = function() {
         gl.bindTexture(gl.TEXTURE_2D, imageTexture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        canvas.height = image.height;
+        canvas.width = image.width;
         draw();
+        
     };
     image.src = url
 }
