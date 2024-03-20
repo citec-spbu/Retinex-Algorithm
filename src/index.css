@@ -34,7 +34,6 @@ header{
     transition: all 0.4s ease 0s;
 }
 .pictures > *{
-    border:1px solid red;
     width: 40%;
     transition: all 0.4s ease 0s;
 }
