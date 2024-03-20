@@ -11,6 +11,7 @@ export function createShader(gl, type, source) {
     gl.deleteShader(shader);
 }
 
+
 export function createProgram(gl, vertexShader, fragmentShader) {
     var program = gl.createProgram();
     gl.attachShader(program, vertexShader);
@@ -24,12 +25,13 @@ export function createProgram(gl, vertexShader, fragmentShader) {
     console.error(gl.getProgramInfoLog(program));
     gl.deleteProgram(program);
 }
+export const options = {
+    contrast : 0.5,
+    retinexScale:0.62,
+    sigma:5
+}
 export function initSliderHandlers(draw){
-    const options = {
-        contrast : 0.5,
-        retinexScale:0.62,
-        sigma:5
-    }
+
 
     const contrastInput = document.getElementById('contrast-range');
     const contrastOutput = document.getElementById('contrast-output');
@@ -39,21 +41,22 @@ export function initSliderHandlers(draw){
 
     const sigmaInput = document.getElementById('sigma-range');
     const sigmaOutput = document.getElementById('sigma-range-output');
-  
-    // Update the output value when the range input changes
+    
+   
     contrastInput.addEventListener('input', function() {
         contrastOutput.textContent = contrastInput.value;
         options.contrast = contrastInput.value;
-        draw(options.contrast,options.retinexScale,options.sigma);
+        
     });
     scaleInput.addEventListener('input', function() {
         scaleOutput.textContent = scaleInput.value;
         options.retinexScale = scaleInput.value;
-        draw(options.contrast,options.retinexScale,options.sigma);
+        
     });
     sigmaInput.addEventListener('input', function() {
         sigmaOutput.textContent = sigmaInput.value;
         options.sigma = sigmaInput.value;
-        draw(options.contrast,options.retinexScale,options.sigma);
+        
     });
+    
 }

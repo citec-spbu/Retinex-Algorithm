@@ -76,7 +76,12 @@ header{
 .rectangle-to-left{
     left: 0;
 }
+.fps-label{
+    margin: 30px;
+    color: #fff;
+    font-size: 30px;
 
+}
 .ranges{
     border-right:1px solid #adb1cc; 
     background-color: #242631;

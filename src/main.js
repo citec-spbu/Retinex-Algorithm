@@ -1,5 +1,4 @@
-import { createShader, createProgram, initSliderHandlers } from './utils.js';
-
+import { createShader, createProgram, initSliderHandlers, options } from './utils.js';
 let gl;
 let image;
 let program;
@@ -63,8 +62,14 @@ function loadImage(url) {
     };
     image.src = url
 }
-
+let lastFrameTime = performance.now();
+let fpsCounter = 0;
+const fpsDisplay = document.querySelector('#fps');
 function draw(contrast = 0.5,retinexScale=0.62,sigma=5) {
+    requestAnimationFrame(() => {
+        draw(options.contrast,options.retinexScale,options.sigma);
+    });
+
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -80,9 +85,9 @@ function draw(contrast = 0.5,retinexScale=0.62,sigma=5) {
     const sigmaLocation = gl.getUniformLocation(program, "u_sigma");
     gl.uniform1f(sigmaLocation, sigma);
     
-    var positionBuffer = gl.createBuffer();
+    const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    var positions = [
+    const positions = [
         -1, -1,
         1, -1,
         -1,  1,
@@ -95,6 +100,23 @@ function draw(contrast = 0.5,retinexScale=0.62,sigma=5) {
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    // Calculate FPS
+    let currentTime = performance.now();
+    let elapsed = currentTime - lastFrameTime;
+
+    fpsCounter++;
+    if (elapsed >= 1000) {
+        const fps = fpsCounter * 1000 / elapsed;
+        console.log(fps);
+        fpsDisplay.innerText = fps.toFixed(1);
+        fpsCounter = 0;
+        lastFrameTime = currentTime;
+    }
+
+
+
+
 }
 
 window.onload = init;
