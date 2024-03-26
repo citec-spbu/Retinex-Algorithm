@@ -1,7 +1,7 @@
 @import "nullstyle.css";
 canvas {
     display: block;
-    margin: 0 auto;
+
     border: 1px solid black;
 }
 header{
@@ -33,17 +33,10 @@ header{
     justify-content: center;
     transition: all 0.4s ease 0s;
 }
-.pictures > *{
-    width: 40%;
-    transition: all 0.4s ease 0s;
-}
 .full-width{
     flex-direction: row;
     width: 100%;
     transition: all 0.4s ease 0s;
-}
-.pictures *{
-    margin:20px;
 }
 .rectangle{
     border:1px solid #adb1cc; 
@@ -76,7 +69,12 @@ header{
 .rectangle-to-left{
     left: 0;
 }
+.fps-label{
+    margin: 30px;
+    color: #fff;
+    font-size: 30px;
 
+}
 .ranges{
     border-right:1px solid #adb1cc; 
     background-color: #242631;
@@ -123,10 +121,5 @@ header{
     }
     .range > * {
         padding: 2px;
-    }
-}
-@media(max-height:900px){
-    .pictures{
-        flex-direction: row;
     }
 }
