@@ -1,10 +1,12 @@
 import { createShader, createProgram, initSliderHandlers, options } from './utils.js';
 export let gl;
+import {calculateFit, tune} from './tuningParameters.js';
 let image;
 let program;
 let positionLocation;
-let texCoordLocation;
 let imageTexture;
+const canvas = document.getElementById('canvas');
+
 async function loadShaderSource(url) {
     const response = await fetch(url);
     if (!response.ok) {
@@ -14,7 +16,6 @@ async function loadShaderSource(url) {
 }
 
 export async function init(src) {
-    const canvas = document.getElementById("canvas");
     gl = canvas.getContext("webgl");
     if (!gl) {
         console.error("WebGL not supported");
@@ -61,14 +62,9 @@ function loadImage(url) {
     };
     image.src = url
 }
-let lastFrameTime = performance.now();
-let fpsCounter = 0;
-const fpsDisplay = document.querySelector('#fps');
-function draw(contrast = 0.5,retinexScale=0.62,sigma=5) {
-    requestAnimationFrame(() => {
-        draw(options.contrast,options.retinexScale,options.sigma);
-    });
-
+const msDisplay = document.querySelector('#ms');
+function draw(contrast = 0.3,retinexScale=0.62,sigma=1) {
+    const startTime = performance.now();
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -99,23 +95,17 @@ function draw(contrast = 0.5,retinexScale=0.62,sigma=5) {
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-    // Calculate FPS
-    let currentTime = performance.now();
-    let elapsed = currentTime - lastFrameTime;
-
-    fpsCounter++;
-    if (elapsed >= 1000) {
-        const fps = fpsCounter * 1000 / elapsed;
-        // console.log(fps);
-        fpsDisplay.innerText = fps.toFixed(1);
-        fpsCounter = 0;
-        lastFrameTime = currentTime;
-    }
-
-
-
+    const fit = calculateFit(gl);
+    const endTime = performance.now();
+    
+    const executionTime = endTime - startTime;
+    msDisplay.innerHTML = `Execution time: ${Math.floor(executionTime)} milliseconds`;
+    return fit;
 
 }
+function configure(){
+    tune(draw);
+}
+document.getElementById("configure").onclick= configure;
 
 window.onload = init;
