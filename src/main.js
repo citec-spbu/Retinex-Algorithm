@@ -107,6 +107,17 @@ function draw(contrast = 0.3,retinexScale=0.62,sigma=1) {
 function configure(){
    tune(draw);
 }
+export async function renderImageArray(){
+    const response = await fetch('fileNames.json')
+    const files = await response.json();
+    for (let fileName of files){
+        await init("/our485/low/"+fileName)
+        await draw(1,0.62,1)
+   
+    }
+}
+
 document.getElementById("configure").onclick= configure;
+document.getElementById("video").onclick= renderImageArray;
 
 window.onload = init;

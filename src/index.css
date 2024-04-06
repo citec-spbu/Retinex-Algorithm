@@ -112,7 +112,8 @@ header{
 .range > * {
     padding: 0;
 }
-.configure-btn{
+.configure-btn, .video-btn{
+    margin: 5px;
     color: #fff;
     width: 150px;
     height: 60px;
