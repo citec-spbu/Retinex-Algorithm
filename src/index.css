@@ -97,6 +97,7 @@ header{
     border:1px solid #adb1cc; 
     text-align: center; 
 }
+
 .range input[type=range]{
     width: 100%;
 }

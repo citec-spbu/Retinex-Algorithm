@@ -57,7 +57,6 @@ async function upload(selector, options={}){
             if (data.type.match('image.*')) { // Проверяем, что файл является изображением
                 var reader = new FileReader();
                 reader.onload = function(e) {
-        
                     let src = e.target.result;
                     preview.insertAdjacentHTML('afterbegin',
                         `<div class="preview-image">
@@ -168,7 +167,6 @@ async function upload(selector, options={}){
             const src=file.src;
             if(firstSrc===null){
                 firstSrc=src;
-    
                 init(firstSrc)
                 // mainPhoto.insertAdjacentHTML('afterbegin', `<img src="${firstSrc}" alt="${file.name}"/>`);
             }
@@ -196,12 +194,10 @@ async function upload(selector, options={}){
         }
         
         if (e.target.classList.contains('addImage')) {
-
             restInput.click();
         }
         if(e.target.classList.contains('rest-remove')){
             let el=null
-
             if(e.target.closest('.rest-photos').childElementCount==2){
                 e.target.closest('.imageContainer').remove();
                 gl.clearColor(1.0, 1.0, 1.0, 1.0); // устанавливаем цвет очистки (белый)

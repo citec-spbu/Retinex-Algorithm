@@ -1,6 +1,7 @@
 import { createShader, createProgram, initSliderHandlers, options } from './utils.js';
 export let gl;
-import {calculateFit, tune} from './tuningParameters.js';
+import {tune} from './helpers/tuning/tune.js';
+import {calculateFit} from './helpers/tuning/calculateFit.js';
 let image;
 let program;
 let positionLocation;
@@ -22,8 +23,8 @@ export async function init(src) {
         return;
     }
 
-    const vertexShaderSource = await loadShaderSource('vertexShader.glsl');
-    const fragmentShaderSource = await loadShaderSource('fragmentShader.glsl');
+    const vertexShaderSource = await loadShaderSource('webgl/vertexShader.glsl');
+    const fragmentShaderSource = await loadShaderSource('webgl/fragmentShader.glsl');
 
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
@@ -104,7 +105,7 @@ function draw(contrast = 0.3,retinexScale=0.62,sigma=1) {
 
 }
 function configure(){
-    tune(draw);
+   tune(draw);
 }
 document.getElementById("configure").onclick= configure;
 
