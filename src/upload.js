@@ -41,7 +41,6 @@ async function upload(selector, options={}){
     input.insertAdjacentElement('afterend', open)
     const triggerInput=()=>{
         input.click();
-        console.log("triggerInput");
     }
 
     card.addEventListener('dragover', function(e) {
@@ -53,13 +52,12 @@ async function upload(selector, options={}){
         explanationText.classList.add("noneDisplay")
         upload.style.display='inline'
         var datas = e.dataTransfer.files; // Получаем URL картинки из браузера
-        console.log(datas)
         for (var i = 0; i < datas.length; i++) {
             const data=datas[i];
             if (data.type.match('image.*')) { // Проверяем, что файл является изображением
                 var reader = new FileReader();
                 reader.onload = function(e) {
-                    console.log(e.target)
+        
                     let src = e.target.result;
                     preview.insertAdjacentHTML('afterbegin',
                         `<div class="preview-image">
@@ -77,7 +75,6 @@ async function upload(selector, options={}){
         }
     });
     const changeHandler=event=>{
-        console.log(8)
         if(!event.target.files.length){
             return
         }
@@ -114,7 +111,6 @@ async function upload(selector, options={}){
         if(!event.target.files.length){
             return
         }
-        console.log(event.target.files) 
         files=Array.from(event.target.files)
         files.forEach(file=>{
             const reader = new FileReader();
@@ -164,7 +160,6 @@ async function upload(selector, options={}){
     function PhotosAreUploaded(files){
         mainPhoto.classList.remove('noneDisplay');
         restPhotos.classList.remove('noneDisplay');
-        console.log(9)
         card.classList.add('noneDisplay');
         let firstSrc=null;
         files.forEach(file=>{
@@ -173,7 +168,7 @@ async function upload(selector, options={}){
             const src=file.src;
             if(firstSrc===null){
                 firstSrc=src;
-                console.log(file.width, file.height)
+    
                 init(firstSrc)
                 // mainPhoto.insertAdjacentHTML('afterbegin', `<img src="${firstSrc}" alt="${file.name}"/>`);
             }
@@ -201,12 +196,12 @@ async function upload(selector, options={}){
         }
         
         if (e.target.classList.contains('addImage')) {
-            console.log("addImage");
+
             restInput.click();
         }
         if(e.target.classList.contains('rest-remove')){
             let el=null
-            console.log()
+
             if(e.target.closest('.rest-photos').childElementCount==2){
                 e.target.closest('.imageContainer').remove();
                 gl.clearColor(1.0, 1.0, 1.0, 1.0); // устанавливаем цвет очистки (белый)
@@ -241,17 +236,12 @@ async function upload(selector, options={}){
     upload.addEventListener('click', uploadHandler);
     
     reduce.addEventListener('click', (e)=>{
-        console.log(canvas.getBoundingClientRect())
-        console.log('click')
         canvas.height = canvas.getBoundingClientRect().height*0.8;
         canvas.width = canvas.getBoundingClientRect().width*0.8;
-        console.log(canvas.height, canvas.width)
     })
     increase.addEventListener('click', (e)=>{
-        console.log('click')
         canvas.height = canvas.getBoundingClientRect().height*1.2;
         canvas.width = canvas.getBoundingClientRect().width*1.2;
-        console.log(canvas.height)
     })
 
 }

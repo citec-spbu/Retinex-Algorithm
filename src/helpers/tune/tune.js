@@ -1,5 +1,11 @@
 
 
+ /**
+ * Calculates the average brightness of an image.
+ *
+ * @param {ImageData} imageData - The image data to calculate the brightness for.
+ * @returns {number} - The average brightness of the image.
+ */
  export function AB(imageData) {
     let brightnessSum = 0;
     for (let i = 0; i < imageData.data.length; i += 4) {
@@ -9,6 +15,13 @@
 }
 
 
+/**
+ * Calculates the average contrast of an image.
+ *
+ * @param {ImageData} imageData - The image data to calculate the contrast for.
+ * @param {number} averageBrightness - The average brightness of the image.
+ * @returns {number} - The contrast of the image.
+ */
 export function AC(imageData, averageBrightness) {
     let contrastSum = 0;
     for (let i = 0; i < imageData.data.length; i += 4) {
@@ -19,6 +32,12 @@ export function AC(imageData, averageBrightness) {
 }
 
 
+/**
+ * Calculates the entropy of an image's brightness distribution.
+ *
+ * @param {ImageData} imageData - The image data to calculate the entropy for.
+ * @returns {number} - The entropy of the image.
+ */
 export function En(imageData) {
     const histogram = new Array(256).fill(0);
     for (let i = 0; i < imageData.data.length; i += 4) {
@@ -35,6 +54,12 @@ export function En(imageData) {
     }
     return entropy;
 }
+/**
+ * Calculates the variance of the gradient magnitude of an image.
+ *
+ * @param {ImageData} imageData - The image data to calculate the variance for.
+ * @returns {number} - The variance of the gradient magnitude of the image.
+ */
 export function DEF(imageData) {
     const sobelKernelX = [
         [-1, 0, 1],
@@ -47,6 +72,13 @@ export function DEF(imageData) {
         [1, 2, 1]
     ];
 
+    /**
+     * Convolves the image data with a given kernel.
+     *
+     * @param {ImageData} imageData - The image data to convolve.
+     * @param {Array<Array<number>>} kernel - The kernel to convolve with.
+     * @returns {Float32Array} - The convolved image data.
+     */
     function convolve(imageData, kernel) {
         const data = imageData.data;
         const width = imageData.width;
@@ -71,7 +103,6 @@ export function DEF(imageData) {
         return result;
     }
 
-    
     const gradientX = convolve(imageData, sobelKernelX);
     const gradientY = convolve(imageData, sobelKernelY);
 
@@ -91,6 +122,12 @@ export function DEF(imageData) {
     }
     return variance / squaredMagnitude.length;
 }
+/**
+ * Calculates the colorfulness of an image.
+ *
+ * @param {ImageData} imageData - The image data to calculate the colorfulness for.
+ * @returns {number} - The colorfulness of the image.
+ */
 export function CCI(imageData) {
     let colorfulnessSum = 0;
     for (let i = 0; i < imageData.data.length; i += 4) {
@@ -104,6 +141,12 @@ export function CCI(imageData) {
     }
     return colorfulnessSum / (imageData.width * imageData.height);
 }
+/**
+ * Calculates the fitness function for genetic algorithm.
+ *
+ * @param {WebGLRenderingContext} gl - The WebGL rendering context.
+ * @returns {number} - The fitness of the image.
+ */
 export function calculateFit(gl){
 
     const pixelData = new Uint8Array(canvas.width * canvas.height * 4); 
@@ -117,7 +160,7 @@ export function calculateFit(gl){
     const en = En(imageData);
     const def = DEF(imageData);
     const cci = CCI(imageData);
-    const fit = (cci**4)*(ab*en*ac*def)**0.25
+    const fit = (cci**4)*(ab*en*ac*def)**0.25 // fit formula
     return fit;
 
 }
@@ -201,6 +244,6 @@ export function tune(draw){
     const sigmaInput = document.getElementById('sigma-range');
     const sigmaOutput = document.getElementById('sigma-range-output');
     sigmaInput.value = sigma.toFixed(1);
-    sigmaOutput.innerText = sigma.toFixed(1);;
-    const fit = draw(0.3,scale,sigma);
+    sigmaOutput.innerText = sigma.toFixed(1);
+    draw(0.3,scale,sigma);
 }

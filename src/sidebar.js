@@ -8,4 +8,3 @@ icon.addEventListener('click', (e)=>{
     pictures.classList.toggle('full-width');
     rectangle.classList.toggle('rectangle-to-left');
 })
-console.log(window.innerWidth)
