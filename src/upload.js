@@ -1,6 +1,6 @@
-import {init} from "./main.js"
+import {init, gl} from "./main.js"
 
-export async function upload(selector, options={}){
+async function upload(selector, options={}){
     function bytesToSize(bytes){
         const sizes=['Bytes', 'KB', 'MB','GB','TB'];
         if(bytes==0) return '0 Bytes';
@@ -18,6 +18,10 @@ export async function upload(selector, options={}){
         return node;
     
     }
+    const canvas = document.getElementById("canvas");
+    const reduce=document.querySelector('.reduce');
+    const increase=document.querySelector('.increase');
+    const restInput=document.querySelector('.restInput');
     const card=document.querySelector('.card');
     const preview=element('div', ['preview']);
     let files = [];
@@ -36,7 +40,7 @@ export async function upload(selector, options={}){
     input.insertAdjacentElement('afterend', upload)
     input.insertAdjacentElement('afterend', open)
     const triggerInput=()=>{
-        input.click()
+        input.click();
     }
 
     card.addEventListener('dragover', function(e) {
@@ -48,16 +52,11 @@ export async function upload(selector, options={}){
         explanationText.classList.add("noneDisplay")
         upload.style.display='inline'
         var datas = e.dataTransfer.files; // Получаем URL картинки из браузера
-        console.log(datas)
         for (var i = 0; i < datas.length; i++) {
             const data=datas[i];
             if (data.type.match('image.*')) { // Проверяем, что файл является изображением
-                
-                
-                
                 var reader = new FileReader();
                 reader.onload = function(e) {
-                    console.log(e.target)
                     let src = e.target.result;
                     preview.insertAdjacentHTML('afterbegin',
                         `<div class="preview-image">
@@ -75,7 +74,6 @@ export async function upload(selector, options={}){
         }
     });
     const changeHandler=event=>{
-
         if(!event.target.files.length){
             return
         }
@@ -108,12 +106,39 @@ export async function upload(selector, options={}){
 
 
     }
+    const changeRestHandler=event=>{
+        if(!event.target.files.length){
+            return
+        }
+        files=Array.from(event.target.files)
+        files.forEach(file=>{
+            const reader = new FileReader();
+            reader.onload=ev=>{
+                const src=ev.target.result;
+                const divImage=document.createElement('div');
+                divImage.classList.add('imageContainer');
+                divImage.insertAdjacentHTML('afterbegin', `
+                    <div class="rest-image">
+                        <div class="rest-remove" data-name="${file.name}">&times;</div> 
+
+                        <img src="${src}" alt="${file.name}"/>
+                    </div> 
+                `);
+                const lastChild = restPhotos.lastElementChild;
+                restPhotos.insertBefore(divImage, lastChild);
+                //restPhotos.insertAdjacentElement('beforeend', divImage);
+            }
+            reader.readAsDataURL(file);
+        })
+
+    }
     const removeHandler=event=>{
         if(!event.target.dataset.name){return }
         const {name}=event.target.dataset;
         files=files.filter(file=>file.name!==name);
         if(!files.length){
-            upload.style.display='none'
+            upload.style.display='none';
+            explanationText.classList.remove("noneDisplay");
         }
         const block=preview.querySelector(`[data-name="${name}"]`).closest(".preview-image");
         block.classList.add('removing');
@@ -128,56 +153,92 @@ export async function upload(selector, options={}){
     }
     const mainPhoto=document.querySelector('.main-photo');
     const restPhotos=document.querySelector('.rest-photos');
+    restPhotos.insertAdjacentHTML('beforeend', `<div class="restPhotosAddImage">
+        <div class="addImage">Добавить изображение</div>
+    </div>`)
     function PhotosAreUploaded(files){
         mainPhoto.classList.remove('noneDisplay');
-        if(files.length>1){
-            restPhotos.classList.remove('noneDisplay');
-        }
-        
+        restPhotos.classList.remove('noneDisplay');
         card.classList.add('noneDisplay');
         let firstSrc=null;
         files.forEach(file=>{
             const divImage=document.createElement('div');
             divImage.classList.add('imageContainer');
-            
-                const src=file.src;
-                if(firstSrc===null){
-                    firstSrc=src;
-                    console.log(file.width, file.height)
-                    init(firstSrc)
-                    // mainPhoto.insertAdjacentHTML('afterbegin', `<img src="${firstSrc}" alt="${file.name}"/>`);
-                }
-                divImage.insertAdjacentHTML('afterbegin', `<img src="${src}" alt="${file.name}"/>`);
+            const src=file.src;
+            if(firstSrc===null){
+                firstSrc=src;
+                init(firstSrc)
+                // mainPhoto.insertAdjacentHTML('afterbegin', `<img src="${firstSrc}" alt="${file.name}"/>`);
+            }
+            divImage.insertAdjacentHTML('afterbegin', `
+                <div class="rest-image">
+                    <div class="rest-remove" data-name="${file.name}">&times;</div> 
 
-                restPhotos.insertAdjacentElement('afterbegin', divImage);
-        
-            
+                    <img src="${src}" alt="${file.name}"/>
+                </div> 
+            `);
+            restPhotos.insertAdjacentElement('afterbegin', divImage);
         });
 
         return firstSrc;
         
     }
-    restPhotos.addEventListener('click', (e)=>{
-    
-        const clonedElement = e.target.cloneNode(true);
+    restPhotos.addEventListener('click', (e)=>{    
         const images = restPhotos.querySelectorAll('img');
         images.forEach(image => {
             image.classList.remove('greenBorder')
         });
         if (e.target.tagName === 'IMG') {
-            e.target.classList.add('greenBorder')
-            console.log(e.target)
-
+            e.target.classList.add('greenBorder');
             init(e.target.src)
-            // mainPhoto.innerHTML="";
-            // mainPhoto.insertAdjacentElement('afterbegin', clonedElement);
         }
-
+        
+        if (e.target.classList.contains('addImage')) {
+            restInput.click();
+        }
+        if(e.target.classList.contains('rest-remove')){
+            let el=null
+            if(e.target.closest('.rest-photos').childElementCount==2){
+                e.target.closest('.imageContainer').remove();
+                gl.clearColor(1.0, 1.0, 1.0, 1.0); // устанавливаем цвет очистки (белый)
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                gl.bindTexture(gl.TEXTURE_2D, null);//Отвязываю изображение от текстуры. Теперь canvas-белый
+                //gl.deleteTexture();//удаляю текстуру
+                mainPhoto.classList.add('noneDisplay');
+                restPhotos.classList.add('noneDisplay');
+                card.classList.remove('noneDisplay');
+                preview.innerHTML="";
+                explanationText.classList.remove("noneDisplay");
+                upload.style.display='none';  
+            }
+            else if (e.target.closest('.imageContainer').previousElementSibling){
+                el=e.target.closest('.imageContainer').previousElementSibling;
+                const elImage=el.querySelector("img");
+                init(elImage.src);
+                e.target.closest('.imageContainer').remove();
+            }
+            else if(e.target.closest('.imageContainer').nextElementSibling){
+                el=e.target.closest('.imageContainer').nextElementSibling;
+                const elImage=el.querySelector("img");
+                init(elImage.src);
+                e.target.closest('.imageContainer').remove();
+            }
+        }
     })
     open.addEventListener('click', triggerInput);
     input.addEventListener('change', changeHandler);
+    restInput.addEventListener('change', changeRestHandler);
     preview.addEventListener('click', removeHandler);
     upload.addEventListener('click', uploadHandler);
+    
+    reduce.addEventListener('click', (e)=>{
+        canvas.height = canvas.getBoundingClientRect().height*0.8;
+        canvas.width = canvas.getBoundingClientRect().width*0.8;
+    })
+    increase.addEventListener('click', (e)=>{
+        canvas.height = canvas.getBoundingClientRect().height*1.2;
+        canvas.width = canvas.getBoundingClientRect().width*1.2;
+    })
 
 }
 upload('#file',{
