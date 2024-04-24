@@ -2,6 +2,7 @@ import { createShader, createProgram, initSliderHandlers, options } from './util
 export let gl;
 import {tune} from './helpers/tuning/tune.js';
 import {calculateFit} from './helpers/tuning/calculateFit.js';
+import {card, mainPhoto,restPhotos} from './upload.js';
 let image;
 let program;
 let positionLocation;
@@ -15,7 +16,6 @@ async function loadShaderSource(url) {
     }
     return await response.text();
 }
-
 export async function init(src) {
     gl = canvas.getContext("webgl");
     if (!gl) {
@@ -108,6 +108,9 @@ function configure(){
    tune(draw);
 }
 export async function renderImageArray(){
+    mainPhoto.classList.remove('noneDisplay');
+    restPhotos.classList.remove('noneDisplay');
+    card.classList.add('noneDisplay');
     const response = await fetch('fileNames.json')
     const files = await response.json();
     for (let fileName of files){

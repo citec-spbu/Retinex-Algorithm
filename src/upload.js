@@ -1,5 +1,7 @@
 import {init, gl} from "./main.js"
-
+export const card=document.querySelector('.card');
+export const mainPhoto=document.querySelector('.main-photo');
+export const restPhotos=document.querySelector('.rest-photos');
 async function upload(selector, options={}){
     function bytesToSize(bytes){
         const sizes=['Bytes', 'KB', 'MB','GB','TB'];
@@ -22,7 +24,6 @@ async function upload(selector, options={}){
     const reduce=document.querySelector('.reduce');
     const increase=document.querySelector('.increase');
     const restInput=document.querySelector('.restInput');
-    const card=document.querySelector('.card');
     const preview=element('div', ['preview']);
     let files = [];
     const input=document.querySelector(selector);
@@ -79,8 +80,6 @@ async function upload(selector, options={}){
         }
         explanationText.classList.add("noneDisplay")
         files=Array.from(event.target.files)
-      
-        //preview.innerHTML='';// перед новой загрузкой картинок подчищаем все старые
         upload.style.display='inline'
         files.forEach(file=>{
             if(!file.type.match('image')){
@@ -126,7 +125,6 @@ async function upload(selector, options={}){
                 `);
                 const lastChild = restPhotos.lastElementChild;
                 restPhotos.insertBefore(divImage, lastChild);
-                //restPhotos.insertAdjacentElement('beforeend', divImage);
             }
             reader.readAsDataURL(file);
         })
@@ -149,10 +147,9 @@ async function upload(selector, options={}){
     const uploadHandler=()=>{
         preview.querySelectorAll('.preview-remove').forEach(e=>e.remove())
         const images=preview.querySelectorAll('img');
-        PhotosAreUploaded(images)////
+        PhotosAreUploaded(images)
     }
-    const mainPhoto=document.querySelector('.main-photo');
-    const restPhotos=document.querySelector('.rest-photos');
+
     restPhotos.insertAdjacentHTML('beforeend', `<div class="restPhotosAddImage">
         <div class="addImage">Добавить изображение</div>
     </div>`)
@@ -162,13 +159,12 @@ async function upload(selector, options={}){
         card.classList.add('noneDisplay');
         let firstSrc=null;
         files.forEach(file=>{
-            const divImage=document.createElement('div');
+            const divImage=document.createElement('div');//фото должно быть обернуто в divImage, чтобы отобразиться в restPhotos
             divImage.classList.add('imageContainer');
             const src=file.src;
             if(firstSrc===null){
                 firstSrc=src;
                 init(firstSrc)
-                // mainPhoto.insertAdjacentHTML('afterbegin', `<img src="${firstSrc}" alt="${file.name}"/>`);
             }
             divImage.insertAdjacentHTML('afterbegin', `
                 <div class="rest-image">
