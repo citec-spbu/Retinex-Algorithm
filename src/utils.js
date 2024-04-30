@@ -41,7 +41,7 @@ export function initSliderHandlers(draw){
 
     const sigmaInput = document.getElementById('sigma-range');
     const sigmaOutput = document.getElementById('sigma-range-output');
-
+    
     contrastInput.addEventListener('input', function() {
         contrastOutput.textContent = contrastInput.value;
         options.contrast = contrastInput.value;

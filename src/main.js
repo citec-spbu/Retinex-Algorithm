@@ -7,7 +7,21 @@ let image;
 let program;
 let positionLocation;
 let imageTexture;
-const canvas = document.getElementById('canvas');
+let positionBuffer;
+let contrastLocation
+let retinexScaleLocation
+let sigmaLocation
+let canvas = document.getElementById('canvas');
+const msDisplay = document.querySelector('#ms');
+
+const positions = new Float32Array([
+    -1, -1,
+    1, -1,
+    -1,  1,
+    -1,  1,
+    1, -1,
+    1,  1,
+]);
 
 async function loadShaderSource(url) {
     const response = await fetch(url);
@@ -45,9 +59,20 @@ export async function init(src) {
     const textureHeight = 236;    
     gl.uniform2f(textureSizeLocation, textureWidth, textureHeight);
 
+    positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+    positionLocation = gl.getAttribLocation(program, "a_position");
+    gl.enableVertexAttribArray(positionLocation);
+    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+
+    contrastLocation = gl.getUniformLocation(program, "u_contrast");
+    retinexScaleLocation = gl.getUniformLocation(program, "u_retinex_scale");
+    sigmaLocation = gl.getUniformLocation(program, "u_sigma");
 
     loadImage(src);
-    initSliderHandlers(draw);
 }
 
 function loadImage(url) {
@@ -63,59 +88,49 @@ function loadImage(url) {
     };
     image.src = url
 }
-const msDisplay = document.querySelector('#ms');
-function draw(contrast = 0.3,retinexScale=0.62,sigma=1) {
+
+
+
+
+
+function draw(contrast = 0.3, retinexScale = 0.62, sigma = 1, isConfiguring = false) {
     const startTime = performance.now();
+
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.useProgram(program);
 
-    const contrastLocation = gl.getUniformLocation(program, "u_contrast");
     gl.uniform1f(contrastLocation, contrast);
-
-    const retinexScaleLocation = gl.getUniformLocation(program, "u_retinex_scale");
     gl.uniform1f(retinexScaleLocation, retinexScale);
-
-    const sigmaLocation = gl.getUniformLocation(program, "u_sigma");
     gl.uniform1f(sigmaLocation, sigma);
-    
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    const positions = [
-        -1, -1,
-        1, -1,
-        -1,  1,
-        -1,  1,
-        1, -1,
-        1,  1,
-    ];
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(positionLocation);
-    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
-    const fit = calculateFit(gl);
-    const endTime = performance.now();
-    
-    const executionTime = endTime - startTime;
-    msDisplay.innerHTML = `Execution time: ${Math.floor(executionTime)} milliseconds`;
-    return fit;
+    let fit;
+    if (isConfiguring) fit = calculateFit(gl);
 
+    const endTime = performance.now();
+    const executionTime = endTime - startTime;
+    msDisplay.innerHTML = `Execution time: ${Math.floor(executionTime)} milliseconds`
+
+    return fit;
 }
 function configure(){
    tune(draw);
 }
+
 export async function renderImageArray(){
     mainPhoto.classList.remove('noneDisplay');
     restPhotos.classList.remove('noneDisplay');
     card.classList.add('noneDisplay');
+
     const response = await fetch('fileNames.json')
     const files = await response.json();
+
     for (let fileName of files){
         await init("/our485/low/"+fileName)
-        await draw(1,0.62,1)
+        console.log("/our485/low/"+fileName);
    
     }
 }
@@ -123,4 +138,7 @@ export async function renderImageArray(){
 document.getElementById("configure").onclick= configure;
 document.getElementById("video").onclick= renderImageArray;
 
-window.onload = init;
+window.onload = () => {
+    init();
+    initSliderHandlers(draw);
+};
