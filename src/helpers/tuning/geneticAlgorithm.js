@@ -11,7 +11,7 @@ function generatePopulation(populationSize) {
 
 function calculateFitness(draw,population) {
     for (let individual of population) {
-        individual.fitness = draw(0.3,individual.scale, individual.sigma);
+        individual.fitness = draw(0.3,individual.scale, individual.sigma, true);
     }
 }
 
@@ -68,3 +68,4 @@ export function geneticAlgorithm(draw,populationSize, tournamentSize, crossoverR
     if (scale>1.5) scale = 1.5;
     return {sigma, scale};
 }
+

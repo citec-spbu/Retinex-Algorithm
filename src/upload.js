@@ -1,4 +1,7 @@
-import {init, gl} from "./main.js"
+import { WebGLContext } from "./WebGLContext.js";
+import { init } from "./init.js";
+
+
 export const card=document.querySelector('.card');
 export const mainPhoto=document.querySelector('.main-photo');
 export const restPhotos=document.querySelector('.rest-photos');
@@ -196,9 +199,9 @@ async function upload(selector, options={}){
             let el=null
             if(e.target.closest('.rest-photos').childElementCount==2){
                 e.target.closest('.imageContainer').remove();
-                gl.clearColor(1.0, 1.0, 1.0, 1.0); // устанавливаем цвет очистки (белый)
-                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-                gl.bindTexture(gl.TEXTURE_2D, null);//Отвязываю изображение от текстуры. Теперь canvas-белый
+                WebGLContext.gl.clearColor(1.0, 1.0, 1.0, 1.0); // устанавливаем цвет очистки (белый)
+                WebGLContext.gl.clear(WebGLContext.gl.COLOR_BUFFER_BIT | WebGLContext.gl.DEPTH_BUFFER_BIT);
+                WebGLContext.gl.bindTexture(WebGLContext.gl.TEXTURE_2D, null);//Отвязываю изображение от текстуры. Теперь canvas-белый
                 //gl.deleteTexture();//удаляю текстуру
                 mainPhoto.classList.add('noneDisplay');
                 restPhotos.classList.add('noneDisplay');
@@ -227,11 +230,11 @@ async function upload(selector, options={}){
     preview.addEventListener('click', removeHandler);
     upload.addEventListener('click', uploadHandler);
     
-    reduce.addEventListener('click', (e)=>{
+    reduce.addEventListener('click', ()=>{
         canvas.height = canvas.getBoundingClientRect().height*0.8;
         canvas.width = canvas.getBoundingClientRect().width*0.8;
     })
-    increase.addEventListener('click', (e)=>{
+    increase.addEventListener('click', ()=>{
         canvas.height = canvas.getBoundingClientRect().height*1.2;
         canvas.width = canvas.getBoundingClientRect().width*1.2;
     })

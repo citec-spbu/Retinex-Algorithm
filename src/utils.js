@@ -25,13 +25,14 @@ export function createProgram(gl, vertexShader, fragmentShader) {
     console.error(gl.getProgramInfoLog(program));
     gl.deleteProgram(program);
 }
-export const options = {
+const options = {
     contrast : 0.3,
     retinexScale:0.62,
     sigma:1
 }
-export function initSliderHandlers(draw){
 
+export function initSliderHandlers(draw){
+    
 
     const contrastInput = document.getElementById('contrast-range');
     const contrastOutput = document.getElementById('contrast-output');
@@ -41,7 +42,7 @@ export function initSliderHandlers(draw){
 
     const sigmaInput = document.getElementById('sigma-range');
     const sigmaOutput = document.getElementById('sigma-range-output');
-
+    
     contrastInput.addEventListener('input', function() {
         contrastOutput.textContent = contrastInput.value;
         options.contrast = contrastInput.value;
