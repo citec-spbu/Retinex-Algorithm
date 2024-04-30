@@ -1,12 +1,17 @@
 import { initSliderHandlers } from "./utils.js";
 import { init } from "./init.js";
 import { draw } from "./draw.js";
-import {tune} from "./helpers/tuning/tune.js"
 import { renderImageArray } from './helpers/webgl/renderImageArray.js';
+import { tune } from "./helpers/tuning/tune.js";
+
 function configure(){
-    tune(draw);
- }
- 
+    setTimeout(function() {
+        tune(draw);
+    }, 0);
+}
+
+
+document.getElementById("configure").onclick = configure;
 document.getElementById("configure").onclick= configure;
 document.getElementById("video").onclick= renderImageArray;
 

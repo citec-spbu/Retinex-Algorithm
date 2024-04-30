@@ -68,3 +68,4 @@ export function geneticAlgorithm(draw,populationSize, tournamentSize, crossoverR
     if (scale>1.5) scale = 1.5;
     return {sigma, scale};
 }
+

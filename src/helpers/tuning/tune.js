@@ -1,4 +1,5 @@
 import { geneticAlgorithm } from "./geneticAlgorithm.js";
+
 export function tune(draw){
     const startTime = performance.now();
     let {scale,sigma} = geneticAlgorithm(draw,10, 3, 1, 0.1, 20);
@@ -17,3 +18,4 @@ export function tune(draw){
     const msDisplay = document.getElementById('ms');
     msDisplay.innerHTML = `Execution time: ${Math.floor(elapsedTime)} milliseconds`;
 }
+
