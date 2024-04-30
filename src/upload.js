@@ -1,5 +1,5 @@
-import { WebGLContext } from "./main.js";
-import { init } from "./main.js";
+import { WebGLContext } from "./WebGLContext.js";
+import { init } from "./init.js";
 
 
 export const card=document.querySelector('.card');
@@ -230,11 +230,11 @@ async function upload(selector, options={}){
     preview.addEventListener('click', removeHandler);
     upload.addEventListener('click', uploadHandler);
     
-    reduce.addEventListener('click', (e)=>{
+    reduce.addEventListener('click', ()=>{
         canvas.height = canvas.getBoundingClientRect().height*0.8;
         canvas.width = canvas.getBoundingClientRect().width*0.8;
     })
-    increase.addEventListener('click', (e)=>{
+    increase.addEventListener('click', ()=>{
         canvas.height = canvas.getBoundingClientRect().height*1.2;
         canvas.width = canvas.getBoundingClientRect().width*1.2;
     })
