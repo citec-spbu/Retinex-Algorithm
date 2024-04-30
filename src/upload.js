@@ -1,4 +1,7 @@
-import {init, gl} from "./main.js"
+import { WebGLContext } from "./main.js";
+import { init } from "./main.js";
+
+
 export const card=document.querySelector('.card');
 export const mainPhoto=document.querySelector('.main-photo');
 export const restPhotos=document.querySelector('.rest-photos');
@@ -196,9 +199,9 @@ async function upload(selector, options={}){
             let el=null
             if(e.target.closest('.rest-photos').childElementCount==2){
                 e.target.closest('.imageContainer').remove();
-                gl.clearColor(1.0, 1.0, 1.0, 1.0); // устанавливаем цвет очистки (белый)
-                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-                gl.bindTexture(gl.TEXTURE_2D, null);//Отвязываю изображение от текстуры. Теперь canvas-белый
+                WebGLContext.gl.clearColor(1.0, 1.0, 1.0, 1.0); // устанавливаем цвет очистки (белый)
+                WebGLContext.gl.clear(WebGLContext.gl.COLOR_BUFFER_BIT | WebGLContext.gl.DEPTH_BUFFER_BIT);
+                WebGLContext.gl.bindTexture(WebGLContext.gl.TEXTURE_2D, null);//Отвязываю изображение от текстуры. Теперь canvas-белый
                 //gl.deleteTexture();//удаляю текстуру
                 mainPhoto.classList.add('noneDisplay');
                 restPhotos.classList.add('noneDisplay');
