@@ -24,7 +24,7 @@ function drawTriangles() {
 function displayExecutionTime(startTime) {
     const endTime = performance.now();
     const executionTime = endTime - startTime;
-    WebGLContext.msDisplay.innerHTML = `Execution time: ${Math.floor(executionTime)} milliseconds`;
+    WebGLContext.msDisplay.innerHTML = `Execution time: ${(executionTime.toFixed(2))} milliseconds`;
 }
 
 export function draw(contrast = 0.3, retinexScale = 0.62, sigma = 1, isConfiguring = false) {
