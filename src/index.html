@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGL Retinex Example</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" type="text/css" href="uploadstyles.css">
+
+</head>
+<body>
+    <header>Photo Editor</header>
+    <div class="wrapper">
+        <div class="pictures">
+            <div class="container">
+                <div class="card">
+                    <input type="file" id="file">
+                    <input class="restInput noneDisplay" multiple="true" type="file">
+                    <div class="explanationText">Перетащите сюда файлы, либо загрузите собственные</div>
+                </div>
+                <div class="main-photo noneDisplay">
+                    <canvas id="canvas">
+
+                    </canvas>
+                    <div class="changeSize">
+                        <div class="increase">Увеличить</div>
+                        <div class="reduce">Уменьшить</div>
+                    </div>
+                </div>
+                <div class="rest-photos noneDisplay"></div>
+            </div>
+
+        </div>
+        <!-- <img src="./icons8-back-64.png"> -->
+        <div class="rectangle"> <div class="chevron-icon">  </div> </div>
+        <div class="ranges">
+            <label class="ms-label">
+                <span id="ms"></span>
+            </label>
+            <div class="range">
+                <p> <span>Контраст:</span> <span id="contrast-output">70</span></p>
+                <input type="range" min="-100" step="1" max="100" value="70" id="contrast-range">
+
+            </div>
+            <!-- <div class="range">
+                <p> <span>Retinex Scale:</span> <span id="retinex-scale-output">0.62</span></p>
+                <input type="range" min="0.2" step="0.01" max="1.5" value="0.62" id="retinex-scale-range">
+            </div> -->
+            <div class="range">
+                <p><span>Sigma1: </span><span id="sigma1-range-output">15</span></p>
+                <input type="range" min="1" step="1"  max="30" value="15" id="sigma1-range">
+            </div>
+            <div class="range">
+                <p><span>Sigma2: </span><span id="sigma2-range-output">40</span></p>
+                <input type="range" min="30" step="1"  max="80" value="40" id="sigma2-range">
+            </div>
+            <div class="range">
+                <p><span>Sigma3: </span><span id="sigma3-range-output">80</span></p>
+                <input type="range" min="80" step="1"  max="150" value="80" id="sigma3-range">
+            </div>
+            <button id="configure" class="configure-btn">Настроить параметры</button>
+            <button id="video" class="video-btn">Видео</button>
+        </div>
+        
+    </div>
+    <script src="./sidebar.js"></script>
+    <script src="./utils.js" type="module"></script>
+    <script src="./index.js" type="module"></script>
+    <script src="./upload.js" type="module"></script>
+</body>
+</html>
